@@ -1,8 +1,5 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:noteapp/class/note_class.dart';
 import 'package:noteapp/pages/add_page.dart';
 import 'package:noteapp/pages/edit_page.dart';
@@ -16,58 +13,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<NoteApp> noteList = [
-    NoteApp(title: "firstone", body: "FirstOne body"),
-    NoteApp(
-        title: "secondone",
-        body:
-            "secondOne body this not a week point it's also a fixed point in current situtaion"),
-  ];
-  // List<NoteApp> noteList = [];
+  // List<NoteApp> noteList = [
+  //   NoteApp(title: "firstone", body: "FirstOne body"),
+  //   NoteApp(
+  //       title: "secondone",
+  //       body:
+  //           "secondOne body this not a week point it's also a fixed point in current situtaion"),
+  // ];
+  List<NoteApp> noteList = [];
 
   late SharedPreferences shPref;
   @override
   void initState() {
     super.initState();
-
-    SharedPreferences.getInstance().then((value) {
-      shPref = value;
-      // print(shPref);
-      getData();
-      // print("Get Data methods");
-      setState(() {});
-      // print(value);
-    });
+    getData();
   }
 
-  void SaveData() {
-    // List<String>? setListItems = noteList.map((value) {
-    //   return jsonEncode(value.toJSBox()).toList();
-    // });
+  void getData() async {
+    shPref = await SharedPreferences.getInstance();
 
-    List<String> noteItemString =
-        noteList.map((e) => jsonEncode(e.toJson())).toList();
-
-    print("save Data ${noteItemString.toList()}");
-
-    shPref.setStringList('myData', noteItemString);
-    setState(() {});
-  }
-
-  void getData() {
-    List<String>? getList = shPref.getStringList('myData');
+    List<String>? getList = shPref.getStringList('myData')!.toList();
 
     if (getList != null) {
-      // List<String>? listItemString =
-      // getList =
       print("Get list: ${getList}");
-
-      Iterable noteList = getList.map((items) {
+      noteList = getList.map((items) {
         return NoteApp.fromJson(jsonDecode(items));
       }).toList();
       print("NoteList ${noteList}");
     }
     setState(() {});
+  }
+
+  void SaveData() {
+    List<String> noteItemString =
+        noteList.map((items) => jsonEncode(items.toJson())).toList();
+    shPref.setStringList('myData', noteItemString);
   }
 
   bool isWantDelete = true;
@@ -153,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                               noteList.remove(noteList[index]);
                               print("${isWantDelete.toString()}");
                               setState(() {});
+                              SaveData();
                             }
                           },
                           icon: Icon(Icons.delete),
@@ -209,7 +190,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.cen,
     );
   }
 }

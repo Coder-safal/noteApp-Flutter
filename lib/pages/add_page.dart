@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:noteapp/class/note_class.dart';
-import 'package:noteapp/pages/home.dart';
 
 class AddNote extends StatefulWidget {
   Function(List) onChanged;
@@ -56,7 +53,7 @@ class _AddNoteState extends State<AddNote> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: bodyController,
-                maxLines: 10,
+                maxLines: 5,
                 maxLength: 260,
                 decoration: InputDecoration(
                     hintText:
